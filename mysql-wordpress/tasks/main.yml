@@ -1,0 +1,37 @@
+---
+# tasks file for mysql-wordpress
+- name: wordpress
+  shell: "kubectl run wordpressOS  --image=wordpress:5.1.1-php7.3-apache"
+  register: Wordpress
+
+- debug:
+    var: "Wordpress.stdout_lines"
+
+
+# task to launch mysql
+
+- name: mysql
+  shell: "kubectl run db1OS --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat     --env=MYSQL_DATABASE=wpdb  --env=MYSQL_USER=root  --env=MYSQL_PASSWORD=redhat"
+  register: MySql
+
+- name: Expose 
+  shell: "kubectl expose pods db1OS  --type=NodePort   --port=80"
+  register: expose
+  ignore_errors: yes
+- debug: 
+    var: "expose.stdout_lines"
+
+- name: "get service"
+  shell: "kubectl get svc"
+  register: svc
+- debug:
+    var: "svc.stdout_lines"
+
+- name: "Pausing for 60 seconds"
+  pause: 
+    seconds: 60
+- name: "getting database IP"
+  shell: "kubectl get pods -o wide"
+  register: Database_IP
+- debug:
+    var: "Database_IP.stdout_lines"
