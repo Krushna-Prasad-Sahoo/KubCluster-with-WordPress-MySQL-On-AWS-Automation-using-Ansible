@@ -1,0 +1,42 @@
+- hosts: localhost
+  vars_files:
+      - credentials.yml
+  tasks:
+  - name: launch instances on AWS 
+    ec2:
+          key_name: "mykey2021"
+          instance_type: "t2.micro"
+          image:  "ami-28e0199be24195beaf"
+          wait: yes
+          count: 1
+          vpc_subnet_id: "subnet-78006c51"
+          assign_public_ip: yes
+          region: "us-east-1"
+          state: present
+          group: "default"
+          aws_access_key: "{{ username   }}"
+          aws_secret_key: "{{  password   }}"
+          instance_tags: 
+                  Name: kub_master
+
+- hosts: localhost
+  vars_files:
+      - credentials.yml
+  tasks:
+  - name: launch instances on AWS
+    ec2:
+          key_name: "mykey2021"
+          instance_type: "t2.micro"
+          image:  "ami-28e0199be24195beaf"
+          wait: yes
+          count: 2
+          vpc_subnet_id: "subnet-78006c51"
+          assign_public_ip: yes
+          region: "us-east-1"
+          state: present
+          group: "default"
+          aws_access_key: "{{ username   }}"
+          aws_secret_key: "{{  password   }}"
+          instance_tags: 
+                  Name: kub_slave
+          
