@@ -1,0 +1,17 @@
+- hosts: ["tag_Name_kub_master"]
+  roles:
+  - name: "master node"
+    role: kub_master
+
+- hosts: ["tag_Name_kub_slave"]
+  vars_prompt:
+  - prompt: "Enter Token to join master: "
+    private: no 
+  roles:
+  - name: "slave node"
+    role: kub_slave    
+
+- hosts: ["tag_Name_kub_master"]
+  roles:
+  - name: "Launching WordPress and MySQL"
+    role:  mysql-wordpress
